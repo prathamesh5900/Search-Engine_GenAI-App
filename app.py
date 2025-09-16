@@ -44,7 +44,7 @@ if "messages" not in st.session_state:
 
 
 for msg in st.session_state["messages"]:
-    st.chat_message(msg["role"]).write([msg["content"]])
+    st.chat_message(msg["role"]).write(msg["content"])
 
 
 ## prompt
@@ -62,9 +62,13 @@ if prompt := st.chat_input(placeholder="What is Machine Learning"):
     with st.chat_message("Assistant"):
         st_cb=StreamlitCallbackHandler(st.container(),expand_new_thoughts=False)
 
-        response = search_agent.run(st.session_state.messages,callbacks=[st_cb])
-        st.session_state.messages.append({"role":"Assistant","content":response})
+        user_input = st.session_state.messages[-1]["content"]
+
+        response = search_agent.run(user_input, callbacks=[st_cb])
+
+        st.session_state.messages.append({"role":"assistant","content":response})
         st.write(response)
+
 
 
 
